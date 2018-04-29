@@ -41,14 +41,7 @@ public class YoungInterferenceExp implements Runnable {
 
         final double baseIntensivity = 0.25;
 
-        for (int waveLength : lightBeam.getWaves()) {
-            results.put(waveLength, new ArrayList<>());
-            final double waveL = waveLength * Math.pow(10, -9);
-            final double k = 2 * Math.PI / waveL;
-            final double lengthBetweenMax = L / d * waveL;
 
-
-        }
 
         return new double[1];
     }

@@ -7,69 +7,76 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class LightBeam {
     @Getter
-    boolean monochromatic;  // CHANGE TO ENUM
+    RadiationType radiationType;
     @Getter
-    int maxWaveLenght;
+    int secondWaveLength;
     @Getter
-    int minWaveLength;
+    int firstWaveLength;
 
     public int[] getWaves() {
-        if (monochromatic)
-            return new int[]{minWaveLength};
-        int[] waves = new int[maxWaveLenght - minWaveLength + 1];
-        for (int i = 0; i < waves.length; i++) {
-            waves[i] = i + minWaveLength;
-        }
-        return waves;
+        if (radiationType == RadiationType.MONOCHROMATIC)
+            return new int[]{firstWaveLength};
+        if (radiationType == RadiationType.BICHROMATIC || radiationType == RadiationType.RECTANGULAR)
+            return new int[]{firstWaveLength, secondWaveLength};
+        return new int[0];
     }
 
-    public void setMonochromatic(boolean monochromatic) {
-        this.monochromatic = monochromatic;
-        if (monochromatic)
-            maxWaveLenght = minWaveLength;
+    public void setRadiationType(RadiationType radiationType) {
+        if (radiationType == RadiationType.MONOCHROMATIC) {
+            secondWaveLength = firstWaveLength;
+        }
+        this.radiationType = radiationType;
     }
 
-    public void setMaxWaveLenght(int maxWaveLenght) {
-        if (maxWaveLenght > Wave.MAX_WAVE_LENGTH) {
-            this.maxWaveLenght = Wave.MAX_WAVE_LENGTH;
+    public void setSecondWaveLength(int secondWaveLength) {
+        if (secondWaveLength > Wave.MAX_WAVE_LENGTH) {
+            this.secondWaveLength = Wave.MAX_WAVE_LENGTH;
             return;
         }
-        if (maxWaveLenght < minWaveLength) {
-            this.maxWaveLenght = minWaveLength;
+        if (secondWaveLength < firstWaveLength) {
+            this.secondWaveLength = firstWaveLength;
             return;
         }
 
-        this.maxWaveLenght = maxWaveLenght;
+        this.secondWaveLength = secondWaveLength;
     }
 
-    public void setMinWaveLength(int minWaveLength) {
-        if (minWaveLength < Wave.MIN_WAVE_LENGTH) {
-            this.minWaveLength = Wave.MIN_WAVE_LENGTH;
+    public void setFirstWaveLength(int firstWaveLength) {
+        if (firstWaveLength < Wave.MIN_WAVE_LENGTH) {
+            this.firstWaveLength = Wave.MIN_WAVE_LENGTH;
             return;
         }
-        if (minWaveLength > maxWaveLenght) {
-            this.minWaveLength = maxWaveLenght;
+        if (firstWaveLength > secondWaveLength) {
+            this.firstWaveLength = secondWaveLength;
             return;
         }
 
-        this.minWaveLength = minWaveLength;
+        this.firstWaveLength = firstWaveLength;
     }
 
     public LightBeam() {
-        this(true, Wave.MAX_WAVE_LENGTH, Wave.MAX_WAVE_LENGTH);
+        this(RadiationType.MONOCHROMATIC, Wave.MAX_WAVE_LENGTH, Wave.MAX_WAVE_LENGTH);
     }
 
     public LightBeam(int waveLenght) {
-        this(true, waveLenght, waveLenght);
+        this(RadiationType.MONOCHROMATIC, waveLenght, waveLenght);
     }
 
-    public LightBeam(int minWaveLength, int maxWaveLength) {
-        this(false, minWaveLength, maxWaveLength);
-    }
-
-    private LightBeam(boolean monochromatic, int maxWaveLenght, int minWaveLength) {
-        this.monochromatic = monochromatic;
-        this.maxWaveLenght = maxWaveLenght;
-        this.minWaveLength = minWaveLength;
+    private LightBeam(RadiationType radiationType, int firstWaveLength, int secondWaveLength) {
+        this.radiationType = radiationType;
+        if (radiationType == RadiationType.MONOCHROMATIC && firstWaveLength != secondWaveLength) {
+            secondWaveLength = firstWaveLength;
+        }
+        if (secondWaveLength < firstWaveLength){
+            int temp = secondWaveLength;
+            secondWaveLength = firstWaveLength;
+            firstWaveLength = temp;
+        }
+        if (secondWaveLength > Wave.MAX_WAVE_LENGTH)
+            secondWaveLength = Wave.MAX_WAVE_LENGTH;
+        if (firstWaveLength < Wave.MIN_WAVE_LENGTH)
+            firstWaveLength = Wave.MIN_WAVE_LENGTH;
+        this.secondWaveLength = secondWaveLength;
+        this.firstWaveLength = firstWaveLength;
     }
 }
