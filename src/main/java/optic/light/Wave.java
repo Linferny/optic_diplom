@@ -1,14 +1,22 @@
 package optic.light;
 
 import javafx.scene.paint.Color;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Wave {
-    private static int offset;
-    private static Color[] waveLengthToRGB;
+    static int offset;
+    static Color[] waveLengthToRGB;
+
+    public final static int MAX_WAVE_LENGTH = 780;
+    public final static int MIN_WAVE_LENGTH = 380;
 
     /**
      * Array of wave length to RGB initialization and filling
@@ -110,6 +118,16 @@ public class Wave {
                     1.0
             );
         return waveLengthToRGB[waveLength - offset];
+    }
+
+    public static Color getRGB(int waveLength, double opacity) {
+        Color color = getRGB(waveLength);
+        return new Color(
+                color.getRed(),
+                color.getGreen(),
+                color.getBlue(),
+                opacity >= 0 && opacity <= 1.0 ? opacity : 1.0
+        );
     }
 
     /**
