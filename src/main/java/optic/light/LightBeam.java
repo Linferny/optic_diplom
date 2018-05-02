@@ -62,7 +62,7 @@ public class LightBeam {
         this(RadiationType.MONOCHROMATIC, waveLenght, waveLenght);
     }
 
-    private LightBeam(RadiationType radiationType, int firstWaveLength, int secondWaveLength) {
+    public LightBeam(RadiationType radiationType, int firstWaveLength, int secondWaveLength) {
         this.radiationType = radiationType;
         if (radiationType == RadiationType.MONOCHROMATIC && firstWaveLength != secondWaveLength) {
             secondWaveLength = firstWaveLength;
