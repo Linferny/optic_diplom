@@ -7,6 +7,8 @@ import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.effect.Blend;
 import javafx.scene.effect.BlendMode;
 import javafx.scene.paint.Color;
@@ -30,6 +32,14 @@ public class OpticOverviewController {
     Button button;
     @FXML
     LineChart<Double, Double> chart;
+    private boolean blend = true;
+    @FXML
+    Label label;
+    @FXML
+    TextField minL;
+    @FXML
+    TextField maxL;
+
 
     @FXML
     void initialize() {
@@ -45,11 +55,29 @@ public class OpticOverviewController {
 
         YoungInterferenceExp exp = new YoungInterferenceExp();
 
-        exp.setLightBeam(new LightBeam(RadiationType.BICHROMATIC, 500, 700));
+        int min = 500;
+        int max = 700;
+        try {
+            min = Integer.parseInt(minL.getText());
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+            return;
+        }
+        try {
+            max = Integer.parseInt(maxL.getText());
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+            return;
+        }
+
+        exp.setLightBeam(new LightBeam(RadiationType.BICHROMATIC, min, max));
         exp.setD(0.000_001);
-        exp.setL(0.01);
+        exp.setL(0.5);
 
         int half = (int) canvas.getWidth() / 2;
+        if (blend) {
+            label.setText("Blend");
+        } else label.setText("Not blended");
 
         boolean test = true;
 
@@ -68,15 +96,27 @@ public class OpticOverviewController {
                     Color c1 = Wave.getRGB(w1, i1);
                     Color c2 = Wave.getRGB(w2, i2);
 
-                    gc.setFill(c1);
-                    gc.fillRect(half + i, 0, 1, height);
-                    gc.fillRect(half - i - 1, 0, 1, height);
+                    if (blend) {
+                        Color c = blend(c1, c2);
 
-                    gc.setFill(c2);
-                    gc.fillRect(half + i, 0, 1, height);
-                    gc.fillRect(half - i - 1, 0, 1, height);
+                        gc.setFill(c);
+                        gc.fillRect(half + i, 0, 1, height);
+                        gc.fillRect(half - i - 1, 0, 1, height);
+
+                    } else {
+
+                        gc.setFill(c1);
+                        gc.fillRect(half + i, 0, 1, height);
+                        gc.fillRect(half - i - 1, 0, 1, height);
+
+                        gc.setFill(c2);
+                        gc.fillRect(half + i, 0, 1, height);
+                        gc.fillRect(half - i - 1, 0, 1, height);
+
+                    }
+
                 }
-
+            blend = !blend;
         } else {
             List<Double> intensity = exp.getBichrom(half);
 
@@ -110,9 +150,10 @@ public class OpticOverviewController {
         double r = weight0 * c0.getRed() + weight1 * c1.getRed();
         double g = weight0 * c0.getGreen() + weight1 * c1.getGreen();
         double b = weight0 * c0.getBlue() + weight1 * c1.getBlue();
-        double a = Math.max(c0.getOpacity(), c1.getOpacity());
+        double a = Math.max(c1.getOpacity(), c0.getOpacity());
+        //double a = c0.getOpacity() + c1.getOpacity() > 1 ? 1.0 : c0.getOpacity() + c1.getOpacity();
 
-        return new Color((int) r, (int) g, (int) b, a);
+        return new Color(r, g, b, a);
     }
 
     void test() {

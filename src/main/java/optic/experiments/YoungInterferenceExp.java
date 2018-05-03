@@ -72,7 +72,7 @@ public class YoungInterferenceExp implements Runnable {
         intensity.put(w2, new ArrayList<>());
 
         final double baseI = 0.25;
-        final double screenL = 0.04;
+        final double screenL = 2.0;
 
         final double waveL1 = lightBeam.getFirstWaveLength() * Math.pow(10, -9);
         final double waveL2 = lightBeam.getSecondWaveLength() * Math.pow(10, -9);
