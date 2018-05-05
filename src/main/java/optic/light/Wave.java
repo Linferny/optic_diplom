@@ -19,7 +19,7 @@ public class Wave {
     public final static int MIN_WAVE_LENGTH = 380;
 
     /**
-     * Array of wave length to RGB initialization and filling
+     * Array of Wave Length to RGB initialization and filling
      */
     static {
         offset = 380;
@@ -103,12 +103,6 @@ public class Wave {
         }
     }
 
-    /**
-     * Get Color from wave length
-     *
-     * @param waveLength
-     * @return
-     */
     public static Color getRGB(int waveLength) {
         if (waveLength < offset || waveLength > waveLengthToRGB.length + offset)
             return new Color(
@@ -120,29 +114,14 @@ public class Wave {
         return waveLengthToRGB[waveLength - offset];
     }
 
-    public static Color getRGB(int waveLength, double opacity) {
+    public static Color getColorWithIntensity(int waveLength, double intensity) {
         Color color = getRGB(waveLength);
         return new Color(
-                color.getRed(),
-                color.getGreen(),
-                color.getBlue(),
-                opacity >= 0 && opacity <= 1.0 ? opacity : 1.0
+                color.getRed() * intensity,
+                color.getGreen() * intensity,
+                color.getBlue() * intensity,
+                1.0
         );
-    }
-
-    /**
-     * Get Color from wave frequency
-     *
-     * @param frequency
-     * @return
-     */
-    public static Color getRGB(double frequency) {
-        return getRGB(freqToLength(frequency));
-    }
-
-    private static int freqToLength(double frequency) {
-        double lightSpeed = 299_792_458;
-        return (int) (lightSpeed * frequency);
     }
 
     private static double adjust(double color, double factor, double gamma) {
