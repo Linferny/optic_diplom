@@ -46,7 +46,9 @@ public class OpticOverviewController {
 
     @FXML
     void initialize() {
-
+        minL.setText("400");
+        maxL.setText("500");
+        chart.getStylesheets().add("/style/chartPoints.css");
     }
 
     @FXML
