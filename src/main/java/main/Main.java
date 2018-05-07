@@ -13,28 +13,22 @@ import java.io.IOException;
 
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Main extends Application {
-    Stage primaryStage;
-    BorderPane rootLayout;
+    private static Stage primaryStage;
+    private static BorderPane rootLayout;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
         this.primaryStage = primaryStage;
         primaryStage.setTitle("Optic");
 
-        /*
-        Parent root = FXMLLoader.load(getClass().getResource("/view/RootLayout.fxml"));
-        primaryStage.setScene(new Scene(root, 600, 400));
-        primaryStage.show();
-        */
-
         initRootLayout();
 
-        showOpticOverview();
+        showYoungOverview();
     }
 
-    private void initRootLayout() {
+    private static void initRootLayout() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/RootLayout.fxml"));
+            FXMLLoader loader = new FXMLLoader(Main.class.getResource("/view/RootLayout.fxml"));
             rootLayout = (BorderPane) loader.load();
 
             Scene scene = new Scene(rootLayout);
@@ -45,9 +39,9 @@ public class Main extends Application {
         }
     }
 
-    private void showOpticOverview(){
+    public static void showYoungOverview(){
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/OpticOverview.fxml"));
+            FXMLLoader loader = new FXMLLoader(Main.class.getResource("/view/YoungOverview.fxml"));
             AnchorPane pane = (AnchorPane) loader.load();
 
             rootLayout.setCenter(pane);
@@ -56,11 +50,27 @@ public class Main extends Application {
         }
     }
 
+    public static void showMichelsonOverview(){
+        try {
+            FXMLLoader loader = new FXMLLoader(Main.class.getResource("/view/MichelsonOverview.fxml"));
+            AnchorPane pane = (AnchorPane) loader.load();
+
+            rootLayout.setCenter(pane);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    public static void showNewtonOverview(){
+        try {
+            FXMLLoader loader = new FXMLLoader(Main.class.getResource("/view/NewtonOverview.fxml"));
+            AnchorPane pane = (AnchorPane) loader.load();
+
+            rootLayout.setCenter(pane);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
     public static void main(String[] args) {
         launch(args);
-    }
-
-    public void testCanvas() {
-
     }
 }

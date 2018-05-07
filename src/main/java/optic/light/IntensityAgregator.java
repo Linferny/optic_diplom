@@ -1,7 +1,7 @@
 package optic.light;
 
 import javafx.scene.paint.Color;
-import optic.experiments.AgregatedResult;
+import optic.experiments.interference.AgregatedResult;
 
 import java.util.ArrayList;
 import java.util.HashMap;

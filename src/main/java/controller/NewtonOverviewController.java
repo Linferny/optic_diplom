@@ -1,4 +1,4 @@
-package main;
+package controller;
 
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
@@ -13,8 +13,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.paint.Paint;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
-import optic.experiments.AgregatedResult;
-import optic.experiments.YoungInterferenceExp;
+import optic.experiments.interference.AgregatedResult;
+import optic.experiments.interference.NewtonExperiment;
+import optic.experiments.interference.YoungExperiment;
 import optic.light.IntensityAgregator;
 import optic.light.LightBeam;
 import optic.light.RadiationType;
@@ -23,17 +24,15 @@ import java.util.List;
 import java.util.Map;
 
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class OpticOverviewController {
+public class NewtonOverviewController {
     @FXML
     Canvas canvas;
     @FXML
     Button button;
     @FXML
     private ScatterChart<?, ?> chart;
-
     @FXML
     private CategoryAxis axisX;
-
     @FXML
     private NumberAxis axisIntense;
     @FXML
@@ -52,16 +51,17 @@ public class OpticOverviewController {
     }
 
     @FXML
-    void testCanvas() {
+    void getSpecter() {
         GraphicsContext gc = canvas.getGraphicsContext2D();
         gc.setFill(Paint.valueOf("#000000"));
         gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+        gc.setLineWidth(1);
         final int height = (int) canvas.getHeight();
 
-        YoungInterferenceExp exp = new YoungInterferenceExp();
+        NewtonExperiment exp = new NewtonExperiment();
 
-        int min = 500;
-        int max = 700;
+        int min = 0;
+        int max = 0;
         try {
             min = Integer.parseInt(minL.getText());
         } catch (NumberFormatException e) {
@@ -74,8 +74,8 @@ public class OpticOverviewController {
         }
 
         exp.setLightBeam(new LightBeam(RadiationType.RECTANGULAR, min, max));
-        exp.setD(0.000_001);
-        exp.setL(0.5);
+        exp.setR(0.01);
+        exp.setScreenL(0.0002);
 
         int half = (int) canvas.getWidth() / 2;
 
@@ -83,10 +83,9 @@ public class OpticOverviewController {
 
         AgregatedResult result = IntensityAgregator.agregate(intensity);
 
-        for (int i = 0; i < result.getColors().length; i++) {
+        for (int i = result.getColors().length - 1; i >= 0; i--) {
             gc.setFill(result.getColors()[i]);
-            gc.fillRect(half + i, 0, 1, height);
-            gc.fillRect(half - i - 1, 0, 1, height);
+            gc.fillOval(half - i, half - i, i * 2, i * 2);
         }
 
         XYChart.Series series = new XYChart.Series();

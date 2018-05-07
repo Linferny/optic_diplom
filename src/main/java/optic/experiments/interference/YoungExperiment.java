@@ -1,4 +1,4 @@
-package optic.experiments;
+package optic.experiments.interference;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -15,7 +15,7 @@ import java.util.Map;
 // Дано: расстояние между источником и экраном, расстояние между щелями и его дельта, количество штрихов и их общее растояние = дельтаХ,
 
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class YoungInterferenceExp{
+public class YoungExperiment {
     @Getter
     @Setter
     double d; // расстояние между отверстиями
@@ -36,11 +36,11 @@ public class YoungInterferenceExp{
 
     int pointsCount = 10_000;
 
-    public YoungInterferenceExp() {
+    public YoungExperiment() {
         lightBeam = new LightBeam();
     }
 
-    public YoungInterferenceExp(LightBeam lightBeam) {
+    public YoungExperiment(LightBeam lightBeam) {
         this.lightBeam = lightBeam;
     }
 
