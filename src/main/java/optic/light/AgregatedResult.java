@@ -1,4 +1,4 @@
-package optic.experiments.interference;
+package optic.light;
 
 import javafx.scene.paint.Color;
 import lombok.AllArgsConstructor;

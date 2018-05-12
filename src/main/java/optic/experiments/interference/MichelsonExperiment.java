@@ -46,7 +46,7 @@ public class MichelsonExperiment {
         if (lightBeam.getRadiationType() == RadiationType.BICHROMATIC)
             waves = new int[]{lightBeam.getFirstWaveLength(),
                     lightBeam.getSecondWaveLength()};
-        if (lightBeam.getRadiationType() == RadiationType.RECTANGULAR) {
+        if (lightBeam.getRadiationType() == RadiationType.SPECTER) {
             waves = new int[lightBeam.getSecondWaveLength() - lightBeam.getFirstWaveLength() + 1];
             for (int i = 0; i < waves.length; i++) {
                 waves[i] = i + lightBeam.getFirstWaveLength();

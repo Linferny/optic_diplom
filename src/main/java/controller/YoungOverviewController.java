@@ -9,25 +9,26 @@ import javafx.scene.chart.ScatterChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.paint.Paint;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
-import optic.experiments.interference.AgregatedResult;
+import optic.light.AgregatedResult;
 import optic.experiments.interference.YoungExperiment;
 import optic.light.IntensityAgregator;
 import optic.light.LightBeam;
 import optic.light.RadiationType;
+import optic.light.Wave;
 
 import java.util.List;
 import java.util.Map;
 
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class YoungOverviewController {
+    //char lambda = 'λ';
     @FXML
-    Canvas canvas;
-    @FXML
-    Button button;
+    private Canvas canvas;
     @FXML
     private ScatterChart<?, ?> chart;
     @FXML
@@ -35,18 +36,80 @@ public class YoungOverviewController {
     @FXML
     private NumberAxis axisIntense;
     @FXML
-    Label label;
+    private Button button;
     @FXML
-    TextField minL;
+    private TextField minL;
     @FXML
-    TextField maxL;
+    private TextField maxL;
+    @FXML
+    private Label label;
+    @FXML
+    private Canvas spector;
+    @FXML
+    private RadioButton radMono;
+    @FXML
+    private RadioButton radBi;
+    @FXML
+    private RadioButton radSpecter;
+    @FXML
+    private Label lblMin;
+    @FXML
+    private Label lblMax;
+    @FXML
+    private TextField txtLengthL;
+    @FXML
+    private TextField txtLengthD;
+    @FXML
+    private Canvas canvasScale;
+    @FXML
+    private TextField txtScreenSize;
+    @FXML
+    private Label lblScreenSize;
+
+    LightBeam lightBeam;
+    double D = 0.000_001;
+    double L = 0.5;
+    double screenL = 2.0;
 
 
     @FXML
     void initialize() {
-        minL.setText("400");
-        maxL.setText("500");
+        minL.setText("380");
+        maxL.setText("780");
         chart.getStylesheets().add("/style/chartPoints.css");
+        lightBeam = new LightBeam(RadiationType.SPECTER, 380, 780);
+        radSpecter.setSelected(true);
+        drawSpecter();
+        getSpecter();
+    }
+
+    void drawSpecter() {
+        GraphicsContext gc = spector.getGraphicsContext2D();
+        gc.setFill(Paint.valueOf("#000000"));
+        gc.fillRect(0, 0, spector.getWidth(), spector.getHeight());
+
+        if (lightBeam.getRadiationType() == RadiationType.SPECTER)
+            for (int wave = lightBeam.getFirstWaveLength(); wave <= lightBeam.getSecondWaveLength(); wave++) {
+                gc.setFill(Wave.getRGB(wave));
+                gc.fillRect((wave - Wave.MIN_WAVE_LENGTH) / 2, 0, 1, spector.getHeight());
+            }
+        else if (lightBeam.getRadiationType() == RadiationType.MONOCHROMATIC) {
+            gc.setFill(Wave.getRGB(lightBeam.getFirstWaveLength()));
+            gc.fillRect((lightBeam.getFirstWaveLength() - Wave.MIN_WAVE_LENGTH) / 2, 0, 1, spector.getHeight());
+        } else if (lightBeam.getRadiationType() == RadiationType.BICHROMATIC) {
+            if (lightBeam.getSecondWaveLength() - lightBeam.getFirstWaveLength() > 1) {
+                gc.setFill(Wave.getRGB(lightBeam.getFirstWaveLength()));
+                gc.fillRect((lightBeam.getFirstWaveLength() - Wave.MIN_WAVE_LENGTH) / 2, 0, 1, spector.getHeight());
+                gc.setFill(Wave.getRGB(lightBeam.getSecondWaveLength()));
+                gc.fillRect((lightBeam.getSecondWaveLength() - Wave.MIN_WAVE_LENGTH) / 2, 0, 1, spector.getHeight());
+            } else {
+                gc.setFill(Wave.getRGB(lightBeam.getFirstWaveLength()));
+                gc.fillRect((lightBeam.getFirstWaveLength() - Wave.MIN_WAVE_LENGTH) / 2, 0, 1, spector.getHeight());
+                gc.setFill(Wave.getRGB(lightBeam.getSecondWaveLength()));
+                gc.fillRect((lightBeam.getSecondWaveLength() - Wave.MIN_WAVE_LENGTH) / 2, 0, 1, spector.getHeight());
+            }
+        }
+
     }
 
     @FXML
@@ -71,10 +134,13 @@ public class YoungOverviewController {
             e.printStackTrace();
         }
 
-        exp.setLightBeam(new LightBeam(RadiationType.RECTANGULAR, min, max));
-        exp.setD(0.000_001);
-        exp.setL(0.5);
-        exp.setScreenL(2.0);
+        lightBeam.setFirstWaveLength(min);
+        lightBeam.setSecondWaveLength(max);
+
+        exp.setLightBeam(lightBeam);
+        exp.setD(D);
+        exp.setL(L);
+        exp.setScreenL(screenL);
 
         int half = (int) canvas.getWidth() / 2;
 
@@ -96,7 +162,105 @@ public class YoungOverviewController {
             series.getData().add(new XYChart.Data<>(String.valueOf(i), 2 * result.getIntensity()[i] - 1));
         }
 
+        drawSpecter();
         chart.getData().clear();
         chart.getData().addAll(series);
     }
+
+    @FXML
+    void clickBi() {
+        radBi.setDisable(true);
+        radSpecter.setDisable(true);
+        radMono.setDisable(true);
+
+        synchronized (lightBeam) {
+            radSpecter.setSelected(false);
+            radMono.setSelected(false);
+            radBi.setSelected(true);
+
+            lightBeam.setRadiationType(RadiationType.BICHROMATIC);
+
+            lblMin.setText("λ(первая)");
+            lblMax.setText("λ(вторая)");
+
+            maxL.setText(String.valueOf(lightBeam.getSecondWaveLength()));
+            minL.setText(String.valueOf(lightBeam.getFirstWaveLength()));
+
+            lblMax.setVisible(true);
+            maxL.setVisible(true);
+
+            redrawAll();
+        }
+
+        radBi.setDisable(false);
+        radSpecter.setDisable(false);
+        radMono.setDisable(false);
+    }
+
+    @FXML
+    void clickMono() {
+        radBi.setDisable(true);
+        radSpecter.setDisable(true);
+        radMono.setDisable(true);
+
+        synchronized (lightBeam) {
+            radSpecter.setSelected(false);
+            radMono.setSelected(true);
+            radBi.setSelected(false);
+
+            lightBeam.setRadiationType(RadiationType.MONOCHROMATIC);
+            lblMin.setText("λ");
+
+            maxL.setText(String.valueOf(lightBeam.getSecondWaveLength()));
+            minL.setText(String.valueOf(lightBeam.getFirstWaveLength()));
+
+            lblMax.setVisible(false);
+            maxL.setVisible(false);
+
+            redrawAll();
+        }
+
+        radBi.setDisable(false);
+        radSpecter.setDisable(false);
+        radMono.setDisable(false);
+    }
+
+    @FXML
+    void clickSpecter() {
+        radBi.setDisable(true);
+        radSpecter.setDisable(true);
+        radMono.setDisable(true);
+
+        synchronized (lightBeam) {
+            radSpecter.setSelected(true);
+            radMono.setSelected(false);
+            radBi.setSelected(false);
+
+            lightBeam.setRadiationType(RadiationType.SPECTER);
+            maxL.setText(String.valueOf(lightBeam.getSecondWaveLength()));
+            minL.setText(String.valueOf(lightBeam.getFirstWaveLength()));
+
+            lblMin.setText("λ(мин.)");
+            lblMax.setText("λ(макс.)");
+
+            lblMax.setVisible(true);
+            maxL.setVisible(true);
+
+            redrawAll();
+        }
+
+        radBi.setDisable(false);
+        radSpecter.setDisable(false);
+        radMono.setDisable(false);
+    }
+
+    private void redrawAll() {
+        drawSpecter();
+        getSpecter();
+    }
+
+    private void initKeyBindings() {
+
+    }
+
 }

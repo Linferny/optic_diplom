@@ -13,7 +13,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.paint.Paint;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
-import optic.experiments.interference.AgregatedResult;
+import optic.light.AgregatedResult;
 import optic.experiments.interference.MichelsonExperiment;
 import optic.light.IntensityAgregator;
 import optic.light.LightBeam;
@@ -73,7 +73,7 @@ public class MichelsonOverviewController {
             e.printStackTrace();
         }
 
-        exp.setLightBeam(new LightBeam(RadiationType.RECTANGULAR, min, max));
+        exp.setLightBeam(new LightBeam(RadiationType.SPECTER, min, max));
         exp.setAngleDegrees(0.001);
         exp.setScreenL(0.002);
 

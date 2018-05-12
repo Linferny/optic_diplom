@@ -13,9 +13,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.paint.Paint;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
-import optic.experiments.interference.AgregatedResult;
+import optic.light.AgregatedResult;
 import optic.experiments.interference.NewtonExperiment;
-import optic.experiments.interference.YoungExperiment;
 import optic.light.IntensityAgregator;
 import optic.light.LightBeam;
 import optic.light.RadiationType;
@@ -73,7 +72,7 @@ public class NewtonOverviewController {
             e.printStackTrace();
         }
 
-        exp.setLightBeam(new LightBeam(RadiationType.RECTANGULAR, min, max));
+        exp.setLightBeam(new LightBeam(RadiationType.SPECTER, min, max));
         exp.setR(0.01);
         exp.setScreenL(0.0002);
 

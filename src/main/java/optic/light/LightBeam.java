@@ -16,15 +16,12 @@ public class LightBeam {
     public int[] getWaves() {
         if (radiationType == RadiationType.MONOCHROMATIC)
             return new int[]{firstWaveLength};
-        if (radiationType == RadiationType.BICHROMATIC || radiationType == RadiationType.RECTANGULAR)
+        if (radiationType == RadiationType.BICHROMATIC || radiationType == RadiationType.SPECTER)
             return new int[]{firstWaveLength, secondWaveLength};
         return new int[0];
     }
 
     public void setRadiationType(RadiationType radiationType) {
-        if (radiationType == RadiationType.MONOCHROMATIC) {
-            secondWaveLength = firstWaveLength;
-        }
         this.radiationType = radiationType;
     }
 
@@ -58,15 +55,13 @@ public class LightBeam {
         this(RadiationType.MONOCHROMATIC, Wave.MAX_WAVE_LENGTH, Wave.MAX_WAVE_LENGTH);
     }
 
-    public LightBeam(int waveLenght) {
-        this(RadiationType.MONOCHROMATIC, waveLenght, waveLenght);
-    }
-
     public LightBeam(RadiationType radiationType, int firstWaveLength, int secondWaveLength) {
         this.radiationType = radiationType;
+        /*
         if (radiationType == RadiationType.MONOCHROMATIC && firstWaveLength != secondWaveLength) {
             secondWaveLength = firstWaveLength;
         }
+        */
         if (secondWaveLength < firstWaveLength){
             int temp = secondWaveLength;
             secondWaveLength = firstWaveLength;
