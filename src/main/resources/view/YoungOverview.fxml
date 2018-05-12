@@ -11,14 +11,14 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="100" minWidth="100" prefHeight="600.0" prefWidth="845.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.YoungOverviewController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="620.0" minWidth="700.0" prefHeight="620.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.YoungOverviewController">
     <children>
-        <SplitPane dividerPositions="0.5883748517200474" layoutY="25.0" prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <SplitPane dividerPositions="0.65" layoutY="25.0" minHeight="620.0" minWidth="700.0" prefHeight="620.0" prefWidth="700.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <items>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="598.0" prefWidth="451.0">
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="598.0" prefWidth="454.0">
                     <children>
                         <Canvas fx:id="canvas" height="400.0" layoutX="14.0" layoutY="14.0" width="400.0" />
-                        <ScatterChart fx:id="chart" layoutY="448.0" prefHeight="104.0" prefWidth="400.0">
+                        <ScatterChart fx:id="chart" layoutX="14.0" layoutY="456.0" prefHeight="124.0" prefWidth="400.0">
                             <xAxis>
                                 <CategoryAxis fx:id="axisX" side="BOTTOM" />
                             </xAxis>
@@ -26,16 +26,14 @@
                                 <NumberAxis fx:id="axisIntense" side="LEFT" />
                             </yAxis>
                         </ScatterChart>
-                  <Label layoutX="14.0" layoutY="414.0" text="Масштаб" />
-                  <Canvas fx:id="canvasScale" height="25.0" layoutX="14.0" layoutY="431.0" width="200.0" />
                   <Label layoutX="333.0" layoutY="414.0" text="Размер экрана" />
                   <TextField fx:id="txtScreenSize" layoutX="265.0" layoutY="430.0" />
                   <Label fx:id="lblScreenSize" layoutX="420.0" layoutY="434.0" text="мм" />
                     </children>
                 </AnchorPane>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="598.0" prefWidth="293.0">
+                <AnchorPane minHeight="0.0" minWidth="200.0" prefHeight="598.0" prefWidth="200.0">
                     <children>
-                        <Button fx:id="button" layoutX="20.0" layoutY="405.0" mnemonicParsing="false" onAction="#getSpecter" text="Вывод" />
+                        <Button fx:id="button" layoutX="20.0" layoutY="405.0" mnemonicParsing="false" onAction="#redrawAll" text="Вывод" />
                         <TextField fx:id="minL" layoutX="20.0" layoutY="260.0" prefHeight="25.0" prefWidth="52.0" />
                         <TextField fx:id="maxL" layoutX="170.0" layoutY="260.0" prefHeight="25.0" prefWidth="52.0" />
                         <Label fx:id="label" layoutX="20.0" layoutY="20.0" text="Тип источника" />

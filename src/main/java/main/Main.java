@@ -32,6 +32,7 @@ public class Main extends Application {
             rootLayout = (BorderPane) loader.load();
 
             Scene scene = new Scene(rootLayout);
+            primaryStage.setResizable(false);
             primaryStage.setScene(scene);
             primaryStage.show();
         } catch (IOException e) {

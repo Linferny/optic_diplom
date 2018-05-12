@@ -11,6 +11,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Paint;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
@@ -26,7 +27,6 @@ import java.util.Map;
 
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class YoungOverviewController {
-    //char lambda = 'λ';
     @FXML
     private Canvas canvas;
     @FXML
@@ -60,8 +60,6 @@ public class YoungOverviewController {
     @FXML
     private TextField txtLengthD;
     @FXML
-    private Canvas canvasScale;
-    @FXML
     private TextField txtScreenSize;
     @FXML
     private Label lblScreenSize;
@@ -74,8 +72,12 @@ public class YoungOverviewController {
 
     @FXML
     void initialize() {
+        initKeyBindings();
         minL.setText("380");
         maxL.setText("780");
+        txtLengthD.setText(String.valueOf(D * 1000_000));
+        txtLengthL.setText(String.valueOf(L * 1000));
+        txtScreenSize.setText(String.valueOf(screenL * 1000));
         chart.getStylesheets().add("/style/chartPoints.css");
         lightBeam = new LightBeam(RadiationType.SPECTER, 380, 780);
         radSpecter.setSelected(true);
@@ -120,22 +122,6 @@ public class YoungOverviewController {
         final int height = (int) canvas.getHeight();
 
         YoungExperiment exp = new YoungExperiment();
-
-        int min = 0;
-        int max = 0;
-        try {
-            min = Integer.parseInt(minL.getText());
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
-        }
-        try {
-            max = Integer.parseInt(maxL.getText());
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
-        }
-
-        lightBeam.setFirstWaveLength(min);
-        lightBeam.setSecondWaveLength(max);
 
         exp.setLightBeam(lightBeam);
         exp.setD(D);
@@ -254,13 +240,83 @@ public class YoungOverviewController {
         radMono.setDisable(false);
     }
 
+    @FXML
     private void redrawAll() {
+        check();
         drawSpecter();
         getSpecter();
     }
 
-    private void initKeyBindings() {
+    private void check() {
+        minL.setText(String.valueOf(lightBeam.getFirstWaveLength()));
+        maxL.setText(String.valueOf(lightBeam.getSecondWaveLength()));
+        txtLengthD.setText(String.valueOf(D * 1_000_000));
+        txtLengthL.setText(String.valueOf(L * 1000));
+        txtScreenSize.setText(String.valueOf(screenL * 1000));
+    }
 
+    private void initKeyBindings() {
+        txtScreenSize.setOnKeyReleased(event -> {
+            if (event.getCode() == KeyCode.ENTER)
+                redrawAll();
+            if (event.getCode().isDigitKey() || event.getCode() == KeyCode.BACK_SPACE || event.getCode() == KeyCode.DELETE) {
+                try {
+                    screenL = Math.abs(Double.parseDouble(txtScreenSize.getText()) / 1000);
+                } catch (NumberFormatException e) {
+                    System.err.println("ERR: screenL");
+                }
+            }
+        });
+        txtLengthL.setOnKeyReleased(event -> {
+            if (event.getCode() == KeyCode.ENTER)
+                redrawAll();
+            if (event.getCode().isDigitKey() || event.getCode() == KeyCode.BACK_SPACE || event.getCode() == KeyCode.DELETE) {
+                try {
+                    L = Math.abs(Double.parseDouble(txtLengthL.getText()) / 1000);
+                } catch (NumberFormatException e) {
+                    System.err.println("ERR: L");
+                }
+            }
+        });
+        txtLengthD.setOnKeyReleased(event -> {
+            if (event.getCode() == KeyCode.ENTER)
+                redrawAll();
+            if (event.getCode().isDigitKey() || event.getCode() == KeyCode.BACK_SPACE || event.getCode() == KeyCode.DELETE) {
+                try {
+                    D = Math.abs(Double.parseDouble(txtLengthD.getText()) / 1_000_000);
+                } catch (NumberFormatException e) {
+                    System.err.println("ERR: D");
+                }
+            }
+        });
+
+        minL.setOnKeyReleased(event -> {
+            if (event.getCode() == KeyCode.ENTER)
+                redrawAll();
+            if (event.getCode().isDigitKey() || event.getCode() == KeyCode.BACK_SPACE || event.getCode() == KeyCode.DELETE) {
+                try {
+                    int wave = Math.abs(Integer.parseInt(minL.getText()));
+                    if (wave >= Wave.MIN_WAVE_LENGTH && wave <= Wave.MAX_WAVE_LENGTH)
+                        lightBeam.setFirstWaveLength(wave);
+                } catch (NumberFormatException e) {
+                    System.err.println("ERR: minL");
+                }
+            }
+
+        });
+        maxL.setOnKeyReleased(event -> {
+            if (event.getCode() == KeyCode.ENTER)
+                redrawAll();
+            if (event.getCode().isDigitKey() || event.getCode() == KeyCode.BACK_SPACE || event.getCode() == KeyCode.DELETE) {
+                try {
+                    int wave = Math.abs(Integer.parseInt(maxL.getText()));
+                    if (wave >= Wave.MIN_WAVE_LENGTH && wave <= Wave.MAX_WAVE_LENGTH)
+                        lightBeam.setSecondWaveLength(wave);
+                } catch (NumberFormatException e) {
+                    System.err.println("ERR: maxL");
+                }
+            }
+        });
     }
 
 }

@@ -2,17 +2,13 @@ package optic.light;
 
 import javafx.scene.paint.Color;
 import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Wave {
-    static int offset;
     static Color[] waveLengthToRGB;
 
     public final static int MAX_WAVE_LENGTH = 780;
@@ -22,7 +18,6 @@ public class Wave {
      * Array of Wave Length to RGB initialization and filling
      */
     static {
-        offset = 380;
         List<Color> colors = new ArrayList<>();
         Color color;
         double factor = 0.0;
@@ -104,24 +99,14 @@ public class Wave {
     }
 
     public static Color getRGB(int waveLength) {
-        if (waveLength < offset || waveLength > waveLengthToRGB.length + offset)
+        if (waveLength < MIN_WAVE_LENGTH || waveLength > waveLengthToRGB.length + MIN_WAVE_LENGTH)
             return new Color(
                     0.0,
                     0.0,
                     0.0,
                     1.0
             );
-        return waveLengthToRGB[waveLength - offset];
-    }
-
-    public static Color getColorWithIntensity(int waveLength, double intensity) {
-        Color color = getRGB(waveLength);
-        return new Color(
-                color.getRed() * intensity,
-                color.getGreen() * intensity,
-                color.getBlue() * intensity,
-                1.0
-        );
+        return waveLengthToRGB[waveLength - MIN_WAVE_LENGTH];
     }
 
     private static double adjust(double color, double factor, double gamma) {
