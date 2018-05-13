@@ -319,8 +319,10 @@ public class MichelsonOverviewController {
             if (event.getCode().isDigitKey() || event.getCode() == KeyCode.BACK_SPACE || event.getCode() == KeyCode.DELETE) {
                 try {
                     int wave = Math.abs(Integer.parseInt(minL.getText()));
-                    if (wave >= Wave.MIN_WAVE_LENGTH && wave <= Wave.MAX_WAVE_LENGTH)
+                    if (wave >= Wave.MIN_WAVE_LENGTH && wave <= Wave.MAX_WAVE_LENGTH) {
                         lightBeam.setFirstWaveLength(wave);
+                        drawSpecter();
+                    }
                 } catch (NumberFormatException e) {
                     System.err.println("ERR: minL");
                 }
@@ -333,8 +335,10 @@ public class MichelsonOverviewController {
             if (event.getCode().isDigitKey() || event.getCode() == KeyCode.BACK_SPACE || event.getCode() == KeyCode.DELETE) {
                 try {
                     int wave = Math.abs(Integer.parseInt(maxL.getText()));
-                    if (wave >= Wave.MIN_WAVE_LENGTH && wave <= Wave.MAX_WAVE_LENGTH)
+                    if (wave >= Wave.MIN_WAVE_LENGTH && wave <= Wave.MAX_WAVE_LENGTH) {
                         lightBeam.setSecondWaveLength(wave);
+                        drawSpecter();
+                    }
                 } catch (NumberFormatException e) {
                     System.err.println("ERR: maxL");
                 }
