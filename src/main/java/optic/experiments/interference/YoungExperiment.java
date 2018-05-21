@@ -34,8 +34,6 @@ public class YoungExperiment {
 
     final double baseI = 0.25;
 
-    int pointsCount = 10_000;
-
     public YoungExperiment() {
         lightBeam = new LightBeam();
     }
@@ -46,14 +44,14 @@ public class YoungExperiment {
 
     public Map<Integer, List<Double>> getSpecter(int count) {
         Map<Integer, List<Double>> intensity = new HashMap<>();
-        int[] waves = new int[0];
+        int[] waves;
 
         if (lightBeam.getRadiationType() == RadiationType.MONOCHROMATIC)
             waves = new int[]{lightBeam.getFirstWaveLength()};
-        if (lightBeam.getRadiationType() == RadiationType.BICHROMATIC)
+        else if (lightBeam.getRadiationType() == RadiationType.BICHROMATIC)
             waves = new int[]{lightBeam.getFirstWaveLength(),
                     lightBeam.getSecondWaveLength()};
-        if (lightBeam.getRadiationType() == RadiationType.SPECTER) {
+        else {
             waves = new int[lightBeam.getSecondWaveLength() - lightBeam.getFirstWaveLength() + 1];
             for (int i = 0; i < waves.length; i++) {
                 waves[i] = i + lightBeam.getFirstWaveLength();
@@ -66,10 +64,10 @@ public class YoungExperiment {
             final double waveL1 = waveLength * Math.pow(10, -9);
             final double k1 = 2 * Math.PI / waveL1;
 
-            for (double x = 0; x < screenL; x += screenL / count) {
-                double I1 = baseI * (1 + Math.cos(k1 * getDelta(x)));
+            for (double x = 0; x < screenL / 2; x += screenL / 2 / count) {
+                double I = baseI * (1 + Math.cos(k1 * getDelta(x)));
 
-                intensity.get(waveLength).add(I1);
+                intensity.get(waveLength).add(I);
             }
         }
         return intensity;

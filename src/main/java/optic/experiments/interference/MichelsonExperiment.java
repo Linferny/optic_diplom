@@ -27,8 +27,6 @@ public class MichelsonExperiment {
 
     final double baseI = 0.25;
 
-    int pointsCount = 10_000;
-
     public MichelsonExperiment() {
         lightBeam = new LightBeam();
     }
@@ -59,7 +57,7 @@ public class MichelsonExperiment {
             final double waveL = waveLength * Math.pow(10, -9);
             final double k = 2 * Math.PI / waveL;
 
-            for (double x = 0; x < screenL; x += screenL / count) {
+            for (double x = 0; x < screenL / 2; x += screenL / 2 / count) {
                 double I = baseI * (1 + Math.cos(k * getDelta(x)));
 
                 intensity.get(waveLength).add(I);

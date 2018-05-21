@@ -38,7 +38,7 @@
                         <TextField fx:id="maxL" layoutX="170.0" layoutY="260.0" prefHeight="25.0" prefWidth="52.0" />
                         <Label fx:id="label" layoutX="20.0" layoutY="20.0" text="Тип источника" />
                         <Canvas fx:id="spector" height="100.0" layoutX="20.0" layoutY="140.0" width="200.0" />
-                        <Label layoutX="20.0" layoutY="120.0" text="Спектор" />
+                        <Label layoutX="20.0" layoutY="120.0" text="Спектр" />
                         <RadioButton fx:id="radMono" layoutX="20.0" layoutY="40.0" mnemonicParsing="false" onAction="#clickMono" text="Монохроматичный" />
                         <RadioButton fx:id="radBi" layoutX="20.0" layoutY="60.0" mnemonicParsing="false" onAction="#clickBi" text="Бихроматичный" />
                         <RadioButton fx:id="radSpecter" layoutX="20.0" layoutY="80.0" mnemonicParsing="false" onAction="#clickSpecter" text="Спектральный" />

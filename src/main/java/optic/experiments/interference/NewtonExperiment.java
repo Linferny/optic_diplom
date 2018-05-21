@@ -60,7 +60,7 @@ public class NewtonExperiment {
             final double waveL = waveLength * Math.pow(10, -9);
             final double k = 2 * Math.PI / waveL;
 
-            for (double r = 0; r < screenL; r += screenL / count) {
+            for (double r = 0; r < screenL / 2; r += screenL / 2 / count) {
                 double I = baseI * (1 + Math.cos(k * getDelta(r, waveL)));
 
                 intensity.get(waveLength).add(I);
