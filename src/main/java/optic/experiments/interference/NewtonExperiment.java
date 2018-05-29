@@ -11,24 +11,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 // Дано: расстояние между источником и экраном, расстояние между щелями и его дельта, количество штрихов и их общее растояние = дельтаХ,
 
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class NewtonExperiment {
+public class NewtonExperiment extends InterferenceExperiment {
     @Getter
     @Setter
     double R; // радиус кривизны
-    @Getter
-    @Setter
-    LightBeam lightBeam;
-    @Getter
-    @Setter
-    double screenL = 2.0;
-
-    final double baseI = 0.25;
-
-    int pointsCount = 10_000;
 
     public NewtonExperiment() {
         lightBeam = new LightBeam();
@@ -38,38 +29,13 @@ public class NewtonExperiment {
         this.lightBeam = lightBeam;
     }
 
+    @Override
     public Map<Integer, List<Double>> getSpecter(int count) {
-        Map<Integer, List<Double>> intensity = new HashMap<>();
-        int[] waves = new int[0];
-
-        if (lightBeam.getRadiationType() == RadiationType.MONOCHROMATIC)
-            waves = new int[]{lightBeam.getFirstWaveLength()};
-        if (lightBeam.getRadiationType() == RadiationType.BICHROMATIC)
-            waves = new int[]{lightBeam.getFirstWaveLength(),
-                    lightBeam.getSecondWaveLength()};
-        if (lightBeam.getRadiationType() == RadiationType.SPECTER) {
-            waves = new int[lightBeam.getSecondWaveLength() - lightBeam.getFirstWaveLength() + 1];
-            for (int i = 0; i < waves.length; i++) {
-                waves[i] = i + lightBeam.getFirstWaveLength();
-            }
-        }
-
-        for (int waveLength : waves) {
-            intensity.put(waveLength, new ArrayList<>());
-
-            final double waveL = waveLength * Math.pow(10, -9);
-            final double k = 2 * Math.PI / waveL;
-
-            for (double r = 0; r < screenL; r += screenL / count) {
-                double I = baseI * (1 + Math.cos(k * getDelta(r, waveL)));
-
-                intensity.get(waveLength).add(I);
-            }
-        }
-        return intensity;
+        return super.getSpecter(count);
     }
 
-    double getDelta(double r, double waveLength) {
-        return r * r / R + waveLength / 2;
+    @Override
+    double getDelta(double... params) {
+        return params[0] * params[0] / R + params[1] / 2;
     }
 }

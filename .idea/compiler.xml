@@ -11,7 +11,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="optic_diplom" target="9" />
+      <module name="optic_diplom" target="1.9" />
     </bytecodeTargetLevel>
   </component>
 </project>

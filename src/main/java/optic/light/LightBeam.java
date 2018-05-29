@@ -16,8 +16,15 @@ public class LightBeam {
     public int[] getWaves() {
         if (radiationType == RadiationType.MONOCHROMATIC)
             return new int[]{firstWaveLength};
-        if (radiationType == RadiationType.BICHROMATIC || radiationType == RadiationType.SPECTER)
+        if (radiationType == RadiationType.BICHROMATIC)
             return new int[]{firstWaveLength, secondWaveLength};
+        if (radiationType == RadiationType.SPECTER) {
+            int[] waves = new int[secondWaveLength - firstWaveLength + 1];
+            for (int i = 0; i < waves.length; i++) {
+                waves[i] = firstWaveLength + i;
+            }
+            return waves;
+        }
         return new int[0];
     }
 
@@ -57,12 +64,7 @@ public class LightBeam {
 
     public LightBeam(RadiationType radiationType, int firstWaveLength, int secondWaveLength) {
         this.radiationType = radiationType;
-        /*
-        if (radiationType == RadiationType.MONOCHROMATIC && firstWaveLength != secondWaveLength) {
-            secondWaveLength = firstWaveLength;
-        }
-        */
-        if (secondWaveLength < firstWaveLength){
+        if (secondWaveLength < firstWaveLength) {
             int temp = secondWaveLength;
             secondWaveLength = firstWaveLength;
             firstWaveLength = temp;
