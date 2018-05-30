@@ -59,8 +59,8 @@ public class NewtonOverviewController {
     private Label lblScreenSize;
 
     LightBeam lightBeam;
-    double screenL = 0.000_2;
-    double R = 0.01;
+    double screenL = 0.002;
+    double R = 0.4;
 
 
     @FXML
